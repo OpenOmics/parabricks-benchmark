@@ -1,20 +1,20 @@
 # Project Information
-site_name: baseline
+site_name: pb-benchmark
 site_author: Skyler Kuhn
 site_description: >-
-  An awesome OpenOmics baseline pipeline
+  Benchmarking Parabricks GPU-accelerated tools
 
 # Repository
-repo_name: OpenOmics/baseline
-repo_url: https://github.com/OpenOmics/baseline
-edit_uri: https://github.com/OpenOmics/baseline/edit/main/docs/
+repo_name: OpenOmics/pb-benchmark
+repo_url: https://github.com/OpenOmics/pb-benchmark
+edit_uri: https://github.com/OpenOmics/pb-benchmark/edit/main/docs/
 
 # Extra
 extra_css:
   - css/extra.css
 
 # Copyright
-copyright: Copyright &copy; 2023 OpenOmics
+copyright: Copyright &copy; 2024 OpenOmics
 
 # Configuration
 theme:
@@ -98,10 +98,10 @@ markdown_extensions:
 nav:
   - About: index.md
   - Commands: 
-    - baseline run: usage/run.md
-    - baseline unlock: usage/unlock.md
-    - baseline install: usage/install.md
-    - baseline cache: usage/cache.md
+    - pb-benchmark run: usage/run.md
+    - pb-benchmark unlock: usage/unlock.md
+    - pb-benchmark install: usage/install.md
+    - pb-benchmark cache: usage/cache.md
   - FAQ:
     - General Questions: faq/questions.md
   - License: license.md

@@ -1,55 +1,55 @@
 <div align="center">
    
-  <h1>baseline 🔬</h1>
+  <h1>pb-benchmark 🔬</h1>
   
-  **_long pipeline name_**
+  **_Benchmarking Parabrick's GPU-accelerated tools_**
 
-  [![tests](https://github.com/OpenOmics/baseline/workflows/tests/badge.svg)](https://github.com/OpenOmics/baseline/actions/workflows/main.yaml) [![docs](https://github.com/OpenOmics/baseline/workflows/docs/badge.svg)](https://github.com/OpenOmics/baseline/actions/workflows/docs.yml) [![GitHub issues](https://img.shields.io/github/issues/OpenOmics/baseline?color=brightgreen)](https://github.com/OpenOmics/baseline/issues)  [![GitHub license](https://img.shields.io/github/license/OpenOmics/baseline)](https://github.com/OpenOmics/baseline/blob/main/LICENSE) 
+  [![tests](https://github.com/OpenOmics/pb-benchmark/workflows/tests/badge.svg)](https://github.com/OpenOmics/pb-benchmark/actions/workflows/main.yaml) [![docs](https://github.com/OpenOmics/pb-benchmark/workflows/docs/badge.svg)](https://github.com/OpenOmics/pb-benchmark/actions/workflows/docs.yml) [![GitHub issues](https://img.shields.io/github/issues/OpenOmics/pb-benchmark?color=brightgreen)](https://github.com/OpenOmics/pb-benchmark/issues)  [![GitHub license](https://img.shields.io/github/license/OpenOmics/pb-benchmark)](https://github.com/OpenOmics/pb-benchmark/blob/main/LICENSE) 
   
   <i>
-    This is the home of the pipeline, baseline. Its long-term goals: to accurately ...insert goal, to infer ...insert goal, and to boldly ...insert goal like no pipeline before!
+    This is the home of the pipeline, pb-benchmark. Its long-term goals: to benchmarking Parabricks GPU-accelerated tools for GATK and beyond!
   </i>
 </div>
 
 ## Overview
-Welcome to baseline! Before getting started, we highly recommend reading through [baseline's documentation](https://openomics.github.io/baseline/).
+Welcome to pb-benchmark! Before getting started, we highly recommend reading through [pb-benchmark's documentation](https://openomics.github.io/pb-benchmark/).
 
-The **`./baseline`** pipeline is composed several inter-related sub commands to setup and run the pipeline across different systems. Each of the available sub commands perform different functions: 
+The **`./pb-benchmark`** pipeline is composed several inter-related sub commands to setup and run the pipeline across different systems. Each of the available sub commands perform different functions: 
 
- * [<code>baseline <b>run</b></code>](https://openomics.github.io/baseline/usage/run/): Run the baseline pipeline with your input files.
- * [<code>baseline <b>unlock</b></code>](https://openomics.github.io/baseline/usage/unlock/): Unlocks a previous runs output directory.
- * [<code>baseline <b>install</b></code>](https://openomics.github.io/baseline/usage/install/): Download reference files locally.
- * [<code>baseline <b>cache</b></code>](https://openomics.github.io/baseline/usage/cache/): Cache remote resources locally, coming soon!
+ * [<code>pb-benchmark <b>run</b></code>](https://openomics.github.io/pb-benchmark/usage/run/): Run the pb-benchmark pipeline with your input files.
+ * [<code>pb-benchmark <b>unlock</b></code>](https://openomics.github.io/pb-benchmark/usage/unlock/): Unlocks a previous runs output directory.
+ * [<code>pb-benchmark <b>install</b></code>](https://openomics.github.io/pb-benchmark/usage/install/): Download reference files locally.
+ * [<code>pb-benchmark <b>cache</b></code>](https://openomics.github.io/pb-benchmark/usage/cache/): Cache remote resources locally, coming soon!
 
-**baseline** is a comprehensive ...insert long description. It relies on technologies like [Singularity<sup>1</sup>](https://singularity.lbl.gov/) to maintain the highest-level of reproducibility. The pipeline consists of a series of data processing and quality-control steps orchestrated by [Snakemake<sup>2</sup>](https://snakemake.readthedocs.io/en/stable/), a flexible and scalable workflow management system, to submit jobs to a cluster.
+**pb-benchmark** is pipeline to test and compare different GPU-accelerated parabricks tools against the tools they were _inspired from_. It relies on technologies like [Singularity<sup>1</sup>](https://singularity.lbl.gov/) to maintain the highest-level of reproducibility. The pipeline consists of a series of data processing steps orchestrated by [Snakemake<sup>2</sup>](https://snakemake.readthedocs.io/en/stable/), a flexible and scalable workflow management system, to submit jobs to a cluster.
 
-The pipeline is compatible with data generated from Illumina short-read sequencing technologies. As input, it accepts a set of FastQ files and can be run locally on a compute instance or on-premise using a cluster. A user can define the method or mode of execution. The pipeline can submit jobs to a cluster using a job scheduler like SLURM (more coming soon!). A hybrid approach ensures the pipeline is accessible to all users.
+The pipeline is compatible with data generated from Illumina short-read sequencing technologies. The GATK germline pipeline was tested using NIST's GIAB HG002, HG003, HG004 samples.
 
-Before getting started, we highly recommend reading through the [usage](https://openomics.github.io/baseline/usage/run/) section of each available sub command.
+Before getting started, we highly recommend reading through the [usage](https://openomics.github.io/pb-benchmark/usage/run/) section of each available sub command.
 
-For more information about issues or trouble-shooting a problem, please checkout our [FAQ](https://openomics.github.io/baseline/faq/questions/) prior to [opening an issue on Github](https://github.com/OpenOmics/baseline/issues).
+For more information about issues or trouble-shooting a problem, please checkout our [FAQ](https://openomics.github.io/pb-benchmark/faq/questions/) prior to [opening an issue on Github](https://github.com/OpenOmics/pb-benchmark/issues).
 
 ## Dependencies
-**Requires:** `singularity>=3.5`  `snakemake>=6.0`
+**Requires:** `singularity>=3.5`  `snakemake<8.0`
 
-At the current moment, the pipeline uses a mixture of enviroment modules and docker images; however, this will be changing soon! In the very near future, the pipeline will only use docker images. With that being said, [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) and [singularity](https://singularity.lbl.gov/all-releases) must be installed on the target system. Snakemake orchestrates the execution of each step in the pipeline. To guarantee the highest level of reproducibility, each step of the pipeline will rely on versioned images from [DockerHub](https://hub.docker.com/orgs/nciccbr/repositories). Snakemake uses singularity to pull these images onto the local filesystem prior to job execution, and as so, snakemake and singularity will be the only two dependencies in the future.
+The pipeline uses the offical parabricks docker image. With that being said, [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) and [singularity](https://singularity.lbl.gov/all-releases) must be installed on the target system. Snakemake orchestrates the execution of each step in the pipeline. To guarantee the highest level of reproducibility, each step of the pipeline will rely on versioned images from [DockerHub](https://hub.docker.com/orgs/nciccbr/repositories). Snakemake uses singularity to pull these images onto the local filesystem prior to job execution, and as so, snakemake and singularity will be the only two dependencies in the future.
 
 ## Installation
 Please clone this repository to your local filesystem using the following command:
 ```bash
 # Clone Repository from Github
-git clone https://github.com/OpenOmics/baseline.git
+git clone https://github.com/OpenOmics/pb-benchmark.git
 # Change your working directory
-cd baseline/
+cd pb-benchmark/
 # Add dependencies to $PATH
 # Biowulf users should run
 module load snakemake singularity
 # Get usage information
-./baseline -h
+./pb-benchmark -h
 ```
 
 ## Contribute 
-This site is a living document, created for and by members like you. baseline is maintained by the members of OpenOmics and is improved by continous feedback! We encourage you to contribute new content and make improvements to existing content via pull request to our [GitHub repository](https://github.com/OpenOmics/baseline).
+This site is a living document, created for and by members like you. pb-benchmark is maintained by the members of OpenOmics and is improved by continous feedback! We encourage you to contribute new content and make improvements to existing content via pull request to our [GitHub repository](https://github.com/OpenOmics/pb-benchmark).
 
 
 ## Cite
@@ -73,35 +73,6 @@ Citation coming soon!
 ```
 
 </details>
-
-<!---
-# Setup from baseline template
-```bash
-# Add your new pipeline name here,
-# whatever you set here will be the
-# name of your cli too. Please make 
-# sure it does not contain any spaces
-# It should only contain, alpha-numeric
-# characters and hyphens. 
-new_pipeline_name="add_your_pipeline_name_here"
-
-# Dry-run: This step automagically builds a 
-# command to update any instances of the string
-# baseline with your new pipeline name, please
-# make sure to set the variable above to whatever
-# you want to name the pipeline and CLI.
-find . -type f -not -path '*/.baseline_version' -not -path '*./CHANGELOG.md' -not -path '*/.git/*' -exec grep 'baseline' {} /dev/null \; | awk -F ':' '{print $1}' | sort | uniq | sed "s/^/sed -i 's@basline@$new_pipeline_name@g' /g"
-
-# Updates any instances of the string baseline
-# with the name you decided/set above.
-find . -type f -not -path '*/.baseline_version' -not -path '*./CHANGELOG.md' -not -path '*/.git/*' -exec grep 'baseline' {} /dev/null \; | awk -F ':' '{print $1}' | sort | uniq | sed "s/^/sed -i 's@basline@$new_pipeline_name@g' /g" | bash
-
-# Rename the cli or main entry point 
-# of the pipeline
-mv baseline "$new_pipeline_name"
-```
--->
-
 
 ## References
 <sup>**1.**  Kurtzer GM, Sochat V, Bauer MW (2017). Singularity: Scientific containers for mobility of compute. PLoS ONE 12(5): e0177459.</sup>  
