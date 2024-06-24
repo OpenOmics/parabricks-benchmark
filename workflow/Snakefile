@@ -3,10 +3,6 @@ from os.path import join
 from os import listdir
 import os, sys, json
 
-# 3rd party imports from pypi
-from snakemake.workflow import workflow as wf_api
-from snakemake.utils import R
-
 # Local imports
 from scripts.common import (
     allocated,
@@ -16,10 +12,69 @@ from scripts.common import (
 )
 
 
+# Global workflow variables and settings
+configfile: 'config.json'                      # Generated from user input and config/*.json
+run_mode = config['options']['mode']           # Run mode: local, slurm, or uge
+samples  = config['samples']                   # Base name of input samples
+workpath = config['options']['output']         # Pipeline's output directory
+tmpdir   = config['options']['tmp_dir']        # Temporary directory
+# Basename of reference genome fasta file
+genome = os.path.basename(
+    config['references']['GENOME_FASTA']
+)
+# BWA index file extensions
+bwa_index_extensions = [
+    ".amb", ".ann", ".bwt", ".pac", ".sa"
+]
+
+# Read in resource information,
+# containing information about 
+# threads, mem, walltimes, etc.
+with open(join('config', 'cluster.json')) as fh:
+    cluster = json.load(fh)
+
+
 # Final ouput files of the pipeline
 rule all:
     input:
-        []
+        # Symlinked reference genome and build BWA index files
+        os.path.join(workpath, "refs", genome),
+        expand(
+            os.path.join(workpath, "refs", genome + "{ext}"), 
+            ext=bwa_index_extensions
+        ),
+
+
+rule build_bwa_index:
+    """Reference building step to create an BWA index for the reference genome.
+    Parabricks requires a BWA-MEM/1.X index to be built 
+    @Inputs:
+        GRCh38 reference genome in fasta format.
+    @Outputs:
+        BWA-MEM index files.
+    """
+    input:
+        ref    = config['references']['GENOME_FASTA'],
+    output:
+        lnk = os.path.join(workpath, "refs", genome),
+        idxs = expand(os.path.join(workpath, "refs", genome + "{ext}"), ext=bwa_index_extensions),
+    params:
+        rname  = "bwa_index",
+        prefix = os.path.join(workpath, "refs", genome),
+    message: "Bulding BWA-MEM Index for '{input.ref}'"
+    threads: int(allocated("threads", "build_bwa_index", cluster))
+    container: config['images']['bwa']
+    shell: """
+    # Symlink reference genome to workpath
+    ln -sf \\
+        {input.ref} \\
+        {output.lnk}
+
+    # Build BWA Index of reference genome
+    bwa index \\
+        -p {params.prefix} \\
+        {input.ref}
+    """
 
 
 # Import rules 

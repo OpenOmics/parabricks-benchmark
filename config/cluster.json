@@ -6,6 +6,13 @@
         "time": "0-04:00:00",
         "gres": "lscratch:500"
     },
+    "build_bwa_index": {
+        "threads": "4",
+        "mem": "32g",
+        "partition": "norm",
+        "time": "0-04:00:00",
+        "gres": "lscratch:30"
+    },
     "1-gpu_normal-memory": {
         "threads": "16",
         "mem": "60g",

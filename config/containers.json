@@ -1,5 +1,6 @@
 {
     "images": {
-        "parabricks": "docker://nvcr.io/nvidia/clara/clara-parabricks:4.3.1-1"
+        "parabricks": "docker://nvcr.io/nvidia/clara/clara-parabricks:4.3.1-1",
+        "bwa": "docker://biocontainers/bwa:v0.7.17_cv1"
     }
 }
