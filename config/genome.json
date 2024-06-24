@@ -1,7 +1,7 @@
 {
     "references": {
         "GENOME_FASTA": "/data/OpenOmics/references/genome-seek/Homo_sapiens_assembly38.fasta",
-        "GENOME_FAI": "/data/OpenOmics/references/genome-seek/Homo_sapiens_assembly38.fasta.fai",
+        "GENOME_FAIDX": "/data/OpenOmics/references/genome-seek/Homo_sapiens_assembly38.fasta.fai",
         "GATK_KNOWN_INDELS": "/data/OpenOmics/references/genome-seek/GATK_resource_bundle/hg38bundle/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz",
         "OTHER_KNOWN_INDELS": "/data/OpenOmics/references/genome-seek/ALL.wgs.1000G_phase3.GRCh38.ncbi_remapper.20150424.shapeit2_indels.vcf.gz"
     }

@@ -46,10 +46,10 @@ from src.utils import (
     err,
     exists,
     fatal,
-    hashed,
     permissions,
     check_cache,
-    require)
+    require
+)
 
 
 # Pipeline Metadata
@@ -58,7 +58,7 @@ __authors__ = 'Skyler Kuhn'
 __email__ = 'skyler.kuhn@nih.gov'
 __home__  =  os.path.dirname(os.path.abspath(__file__))
 _name = os.path.basename(sys.argv[0])
-_description = 'An awesome pb-benchmark pipeline'
+_description = 'An awesome pipeline to benchmark Parabricks.'
 
 
 def unlock(sub_args):
@@ -118,6 +118,11 @@ def run(sub_args):
         repo_path = git_repo,
         output_path = sub_args.output
     )
+
+    # Override the default genomic reference
+    if sub_args.genome_fasta:
+        config['references']['GENOME_FASTA'] = sub_args.genome_fasta
+        config['references']['GENOME_INDEX'] = sub_args.genome_fasta + '.fai'
 
     # Step 3. Resolve docker/singularity bind
     # paths from the config file.
@@ -243,8 +248,9 @@ def parsed_arguments(name, description):
                 [--dry-run] [--job-name JOB_NAME] [--mode {{slurm,local}}] \\
                 [--sif-cache SIF_CACHE] [--singularity-cache SINGULARITY_CACHE] \\
                 [--silent] [--threads THREADS] [--tmp-dir TMP_DIR] \\
+                [--genome-fasta GENOME_FASTA] \\
                 --input INPUT [INPUT ...] \\
-                --output OUTPUT
+                --output OUTPUT 
 
         Optional arguments are shown in square brackets above.
 
@@ -267,10 +273,17 @@ def parsed_arguments(name, description):
                                 known as the pipeline's working directory. If the user
                                 provided working directory has not been initialized,
                                 it will be created automatically.
-                                  Example: --output /data/$USER/output
-
+                                  Example: --output benchmark/
+  
         {3}{4}Analysis options:{5}
-          ...coming soon!
+          --genome-fasta GENOME_FASTA
+                                Path to a reference genome in FASTA format. This file
+                                is used by the pipeline to align reads to against the
+                                reference genome and build any other reference files.
+                                By default, it uses a referenec file in the OpenOmics
+                                shared group area on Biowulf. Please ensure the
+                                provided fasta file is indexed with samtools faidx.
+                                  Example: --genome-fasta .tests/hg38.fa
 
         {3}{4}Orchestration options:{5}
           --mode {{slurm,local}}  
@@ -358,6 +371,7 @@ def parsed_arguments(name, description):
           # Step 2A.) Dry-run the pipeline
           ./{0} run --input .tests/*.R?.fastq.gz \\
                          --output /data/$USER/output \\
+                         --genome-fasta .tests/hg38.fa \\
                          --mode slurm \\
                          --dry-run
 
@@ -367,6 +381,7 @@ def parsed_arguments(name, description):
           # the pipeline in this mode.
           ./{0} run --input .tests/*.R?.fastq.gz \\
                          --output /data/$USER/output \\
+                         --genome-fasta .tests/hg38.fa \\
                          --mode slurm
 
         {2}{3}Version:{4}
@@ -400,6 +415,16 @@ def parsed_arguments(name, description):
         '--output',
         type = lambda option: os.path.abspath(os.path.expanduser(option)),
         required = True,
+        help = argparse.SUPPRESS
+    )
+
+    # Reference Genome in FASTA format
+    subparser_run.add_argument(
+        '--genome-fasta',
+        # Check if the file exists and if it is readable
+        type = lambda file: permissions(parser, file, os.R_OK),
+        required = False,
+        default = None,
         help = argparse.SUPPRESS
     )
 
