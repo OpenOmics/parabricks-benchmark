@@ -3,6 +3,28 @@
         "threads": "4",
         "mem": "8g",
         "partition": "norm",
-        "time": "0-04:00:00"
+        "time": "0-04:00:00",
+        "gres": "lscratch:500"
+    },
+    "1-gpu_normal-memory": {
+        "threads": "16",
+        "mem": "60g",
+        "partition": "gpu",
+        "time": "0-06:00:00",
+        "gres": "gpu:a100:1,lscratch:500"
+    },
+    "1-gpu_high-memory": {
+        "threads": "16",
+        "mem": "120g",
+        "partition": "gpu",
+        "time": "0-06:00:00",
+        "gres": "gpu:a100:1,lscratch:500"
+    },
+    "2-gpu_normal-memory": {
+        "threads": "16",
+        "mem": "120g",
+        "partition": "gpu",
+        "time": "0-06:00:00",
+        "gres": "gpu:a100:2,lscratch:500"
     }
 }
