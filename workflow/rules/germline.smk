@@ -44,7 +44,7 @@ rule parabricks_gatk_germline_1gpu_normal_memory:
         # Parabricks options
         RUNNING_MEMORY_GB = int(
             allocated("mem", "1-gpu_normal-memory", cluster).lower().rstrip("g") 
-        ) - 12 ,
+        ) / 2 ,
         KNOWN_INDELS_1 = config['references']['GATK_KNOWN_INDELS'],
         KNOWN_INDELS_2 = config['references']['OTHER_KNOWN_INDELS'],
     threads: int(allocated("threads", "1-gpu_normal-memory", cluster))
@@ -111,7 +111,7 @@ rule parabricks_gatk_germline_1gpu_normal_memory_optimized:
         # Parabricks options
         RUNNING_MEMORY_GB = int(
             allocated("mem", "1-gpu_normal-memory_optimized", cluster).lower().rstrip("g") 
-        ) - 12 ,
+        ) / 2 ,
         KNOWN_INDELS_1 = config['references']['GATK_KNOWN_INDELS'],
         KNOWN_INDELS_2 = config['references']['OTHER_KNOWN_INDELS'],
     threads: int(allocated("threads", "1-gpu_normal-memory_optimized", cluster))
@@ -123,7 +123,7 @@ rule parabricks_gatk_germline_1gpu_normal_memory_optimized:
     singularity exec \\
         -c \\
         --nv  \\
-        --env TCMALLOC_MAX_TOTAL_THREAD_CACHE_BYTES=268435456 \\ 
+        --env TCMALLOC_MAX_TOTAL_THREAD_CACHE_BYTES=268435456 \\
         -B {params.bindpaths},{params.tmpdir}:/tmp \\
         {params.sif} \\
              pbrun germline \\
@@ -188,7 +188,7 @@ rule parabricks_gatk_germline_1gpu_low_memory:
         # Parabricks options
         RUNNING_MEMORY_GB = int(
             allocated("mem", "1-gpu_low-memory", cluster).lower().rstrip("g") 
-        ) - 12 ,
+        ) / 2 ,
         KNOWN_INDELS_1 = config['references']['GATK_KNOWN_INDELS'],
         KNOWN_INDELS_2 = config['references']['OTHER_KNOWN_INDELS'],
     threads: int(allocated("threads", "1-gpu_low-memory", cluster))
@@ -405,7 +405,7 @@ rule parabricks_gatk_germline_2gpu_normal_memory_optimized:
     singularity exec \\
         -c \\
         --nv  \\
-        --env TCMALLOC_MAX_TOTAL_THREAD_CACHE_BYTES=268435456 \\ 
+        --env TCMALLOC_MAX_TOTAL_THREAD_CACHE_BYTES=268435456 \\
         -B {params.bindpaths},{params.tmpdir}:/tmp \\
         {params.sif} \\
              pbrun germline \\
