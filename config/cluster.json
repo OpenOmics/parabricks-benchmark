@@ -13,7 +13,21 @@
         "time": "0-04:00:00",
         "gres": "lscratch:30"
     },
+    "1-gpu_low-memory": {
+        "threads": "16",
+        "mem": "60g",
+        "partition": "gpu",
+        "time": "0-08:00:00",
+        "gres": "gpu:a100:1,lscratch:500"
+    },
     "1-gpu_normal-memory": {
+        "threads": "16",
+        "mem": "60g",
+        "partition": "gpu",
+        "time": "0-06:00:00",
+        "gres": "gpu:a100:1,lscratch:500"
+    },
+    "1-gpu_normal-memory_optimized": {
         "threads": "16",
         "mem": "60g",
         "partition": "gpu",
@@ -27,11 +41,25 @@
         "time": "0-06:00:00",
         "gres": "gpu:a100:1,lscratch:500"
     },
-    "2-gpu_normal-memory": {
-        "threads": "16",
+    "2-gpu_low-memory": {
+        "threads": "32",
         "mem": "120g",
         "partition": "gpu",
-        "time": "0-06:00:00",
+        "time": "0-04:00:00",
+        "gres": "gpu:a100:2,lscratch:500"
+    },
+    "2-gpu_normal-memory": {
+        "threads": "32",
+        "mem": "120g",
+        "partition": "gpu",
+        "time": "0-04:00:00",
+        "gres": "gpu:a100:2,lscratch:500"
+    },
+    "2-gpu_normal-memory_optimized": {
+        "threads": "32",
+        "mem": "120g",
+        "partition": "gpu",
+        "time": "0-04:00:00",
         "gres": "gpu:a100:2,lscratch:500"
     }
 }

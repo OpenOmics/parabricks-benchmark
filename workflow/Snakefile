@@ -38,7 +38,8 @@ with open(join('config', 'cluster.json')) as fh:
 rule all:
     input:
         # Symlinked reference genome and build BWA index files,
-        # Output files of `rule build_bwa_index`
+        # Output files of `rule build_bwa_index` in file 
+        # `rules/build.smk`
         join(workpath, "refs", genome),
         expand(
             join(workpath, "refs", genome + "{ext}"), 
@@ -46,117 +47,59 @@ rule all:
         ),
         # Run Parabricks germline pipeline with 1 GPU and normal memory,
         # Output files of `rule parabricks_gatk_germline_1gpu_normal_memory`
+        # in file `rules/germline.smk`
         expand(
             join(workpath, "gatk_germline", "1gpu_normal_memory", "{name}", "{name}.bam"),
             name=samples
         ),
-
-
-rule build_bwa_index:
-    """Reference building step to create an BWA index for the reference genome.
-    Parabricks requires a BWA-MEM/1.X index to be built 
-    @Inputs:
-        GRCh38 reference genome in fasta format.
-    @Outputs:
-        BWA-MEM index files.
-    """
-    input:
-        ref  = config['references']['GENOME_FASTA'],
-    output:
-        lnk  = join(workpath, "refs", genome),
-        idxs = expand(join(workpath, "refs", genome + "{ext}"), ext=bwa_index_extensions),
-    params:
-        prefix = join(workpath, "refs", genome),
-        # Job submission parameters
-        rname = "bwa_index",
-        mem   = allocated("mem", "build_bwa_index", cluster),
-        gres  = allocated("gres", "build_bwa_index", cluster),
-        time  = allocated("time", "build_bwa_index", cluster),
-        partition = allocated("partition", "build_bwa_index", cluster),
-    message: "Bulding BWA-MEM Index for '{input.ref}'"
-    threads: int(allocated("threads", "build_bwa_index", cluster))
-    container: config['images']['bwa']
-    shell: """
-    # Symlink reference genome and 
-    # its index to the workpath
-    ln -sf \\
-        {input.ref} \\
-        {output.lnk}
-    ln -sf \\
-        {input.ref}.fai \\
-        {output.lnk}.fai
-
-    # Build BWA Index of reference genome
-    bwa index \\
-        -p {params.prefix} \\
-        {input.ref}
-    """
-
-
-rule parabricks_gatk_germline_1gpu_normal_memory:
-    """Benchmarking Parabricks GATK Germline pipeline with 1 GPU and an normal allotment
-    of main memory. NOTE: The limit memory option needs to be toned down to allow for 
-    sufficent system memory to be available for the GPU. Internal testing has shown that
-    parabricks germline pipeline tends to use more than the allocated memory (even with
-    the --memory-limit option).
-    @Inputs:
-        GIAB Sample fastq file.
-    @Outputs:
-        BAM file
-    """
-    input:
-        idxs = expand(join(workpath, "refs", genome + "{ext}"), ext=bwa_index_extensions),
-        lnk  = join(workpath, "refs", genome),
-        r1   = join(workpath,"{name}.R1.fastq.gz"),
-        r2   = join(workpath,"{name}.R2.fastq.gz"),
-    output:
-        bam   = join(workpath, "gatk_germline", "1gpu_normal_memory", "{sample}", "{name}.bam"),
-        gvcf  = join(workpath, "gatk_germline", "1gpu_normal_memory", "{sample}", "{name}.g.vcf.gz"),
-        recal = join(workpath, "gatk_germline", "1gpu_normal_memory", "{sample}", "{name}.recal"),
-    params:
-        # Rule specific parameters
-        sample = "{name}",
-        # Job submission parameters
-        rname = "bwa_index_1gpu_normal_memory",
-        mem   = allocated("mem", "1-gpu_normal-memory", cluster),
-        gres  = allocated("gres", "1-gpu_normal-memory", cluster),
-        time  = allocated("time", "1-gpu_normal-memory", cluster),
-        partition = allocated("partition", "1-gpu_normal-memory", cluster),
-        # Singularity options
-        bindpaths = ','.join(bindpaths),
-        tmpdir    = tmpdir,
-        sif       = config['images']['parabricks'],
-        # Parabricks options
-        RUNNING_MEMORY_GB = int(
-            allocated("mem", "1-gpu_normal-memory", cluster).lower().rstrip("g") 
-        ) - 12 ,
-        KNOWN_INDELS_1 = config['references']['GATK_KNOWN_INDELS'],
-        KNOWN_INDELS_2 = config['references']['OTHER_KNOWN_INDELS'],
-    threads: int(allocated("threads", "1-gpu_normal-memory", cluster))
-    shell: """
-    # Run Parabricks germline pipeline with
-    # default acceleration options
-    singularity exec \\
-        -c \\
-        --nv  \\
-        -B {params.bindpaths},{params.tmpdir}:/tmp \\
-        {params.sif} \\
-             pbrun germline \\
-                --ref {input.lnk} \\
-                --in-fq {input.r1} {input.r1} "@RG\\tID:{params.sample}\\tSM:{params.sample}\\tPL:illumina\\tLB:{params.sample}\\tPU:{params.sample}\\tCN:ncbr\\tDS:wgs" \\
-                --knownSites {params.KNOWN_INDELS_1} \\
-                --knownSites {params.KNOWN_INDELS_2} \\
-                --out-bam {output.bam} \\
-                --out-variants {output.gvcf} \\
-                --out-recal-file {output.recal} \\
-                --gvcf \\
-                --bwa-options="-M" \\
-                --monitor-usage \\
-                --memory-limit {params.RUNNING_MEMORY_GB} \\
-                --tmp-dir /tmp
-    """
+        # Run Parabricks germline pipeline with 1 GPU and normal memory and
+        # a recommended set of option to gain the best performance/runtimes,
+        # Output files of `rule parabricks_gatk_germline_1gpu_normal_memory_optimized`
+        # in file `rules/germline.smk`
+        expand(
+            join(workpath, "gatk_germline", "1gpu_normal_memory_optimized", "{name}", "{name}.bam"),
+            name=samples
+        ),
+        # Run Parabricks germline pipeline with 1 GPU and low memory options,
+        # Output files of `rule parabricks_gatk_germline_1gpu_low_memory`
+        # in file `rules/germline.smk`
+        expand(
+            join(workpath, "gatk_germline", "1gpu_low_memory", "{name}", "{name}.bam"),
+            name=samples
+        ),
+        # Run Parabricks germline pipeline with 1 GPU and high memory,
+        # Output files of `rule parabricks_gatk_germline_1gpu_high_memory`
+        # in file `rules/germline.smk`
+        expand(
+            join(workpath, "gatk_germline", "1gpu_high_memory", "{name}", "{name}.bam"),
+            name=samples
+        ),
+        # Run Parabricks germline pipeline with 2 GPU and normal memory,
+        # Output files of `rule parabricks_gatk_germline_2gpu_normal_memory`
+        # in file `rules/germline.smk`
+        expand(
+            join(workpath, "gatk_germline", "2gpu_normal_memory", "{name}", "{name}.bam"),
+            name=samples
+        ),
+        # Run Parabricks germline pipeline with 2 GPU and normal memory and
+        # a recommended set of option to gain the best performance/runtimes,
+        # Output files of `rule parabricks_gatk_germline_2gpu_normal_memory_optimized`
+        # in file `rules/germline.smk`
+        expand(
+            join(workpath, "gatk_germline", "2gpu_normal_memory_optimized", "{name}", "{name}.bam"),
+            name=samples
+        ),
+        # Run Parabricks germline pipeline with 2 GPU and low memory options,
+        # Output files of `rule parabricks_gatk_germline_2gpu_low_memory`
+        # in file `rules/germline.smk`
+        expand(
+            join(workpath, "gatk_germline", "2gpu_low_memory", "{name}", "{name}.bam"),
+            name=samples
+        ),
 
 
 # Import rules 
 include: join("rules", "common.smk")
 include: join("rules", "hooks.smk")
+include: join("rules", "build.smk")
+include: join("rules", "germline.smk")
