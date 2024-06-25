@@ -1,15 +1,15 @@
-# <code>pb-benchmark <b>run</b></code>
+# <code>parabricks-benchmark <b>run</b></code>
 
 ## 1. About 
-The `pb-benchmark` executable is composed of several inter-related sub commands. Please see `pb-benchmark -h` for all available options.
+The `parabricks-benchmark` executable is composed of several inter-related sub commands. Please see `parabricks-benchmark -h` for all available options.
 
-This part of the documentation describes options and concepts for <code>pb-benchmark <b>run</b></code> sub command in more detail. With minimal configuration, the **`run`** sub command enables you to start running pb-benchmark pipeline. 
+This part of the documentation describes options and concepts for <code>parabricks-benchmark <b>run</b></code> sub command in more detail. With minimal configuration, the **`run`** sub command enables you to start running parabricks-benchmark pipeline. 
 
-Setting up the pb-benchmark pipeline is fast and easy! In its most basic form, <code>pb-benchmark <b>run</b></code> only has *two required inputs*.
+Setting up the parabricks-benchmark pipeline is fast and easy! In its most basic form, <code>parabricks-benchmark <b>run</b></code> only has *two required inputs*.
 
 ## 2. Synopsis
 ```text
-$ pb-benchmark run [--help] \
+$ parabricks-benchmark run [--help] \
       [--mode {slurm,local}] [--job-name JOB_NAME] [--batch-id BATCH_ID] \
       [--tmp-dir TMP_DIR] [--silent] [--sif-cache SIF_CACHE] \ 
       [--singularity-cache SINGULARITY_CACHE] \
@@ -43,7 +43,7 @@ Each of the following arguments are required. Failure to provide a required argu
 >   
 > This location is where the pipeline will create all of its output files, also known as the pipeline's working directory. If the provided output directory does not exist, it will be created automatically.
 > 
-> ***Example:*** `--output /data/$USER/pb-benchmark_out`
+> ***Example:*** `--output /data/$USER/parabricks-benchmark_out`
 
 ### 2.2 Analysis options
 
@@ -81,7 +81,7 @@ Each of the following arguments are optional, and do not need to be provided.
 > Execution Method. Defines the mode or method of execution. Vaild mode options include: slurm or local. 
 > 
 > ***slurm***    
-> The slurm execution method will submit jobs to the [SLURM workload manager](https://slurm.schedmd.com/). It is recommended running pb-benchmark in this mode as execution will be significantly faster in a distributed environment. This is the default mode of execution.
+> The slurm execution method will submit jobs to the [SLURM workload manager](https://slurm.schedmd.com/). It is recommended running parabricks-benchmark in this mode as execution will be significantly faster in a distributed environment. This is the default mode of execution.
 >
 > ***local***  
 > Local executions will run serially on compute instance. This is useful for testing, debugging, or when a users does not have access to a high performance computing environment. If this option is not provided, it will default to a local execution mode. 
@@ -92,9 +92,9 @@ Each of the following arguments are optional, and do not need to be provided.
   `--job-name JOB_NAME`  
 > **Set the name of the pipeline's master job.**  
 > *type: string*
-> *default: pl:pb-benchmark*
+> *default: pl:parabricks-benchmark*
 > 
-> When submitting the pipeline to a job scheduler, like SLURM, this option always you to set the name of the pipeline's master job. By default, the name of the pipeline's master job is set to "pl:pb-benchmark".
+> When submitting the pipeline to a job scheduler, like SLURM, this option always you to set the name of the pipeline's master job. By default, the name of the pipeline's master job is set to "pl:parabricks-benchmark".
 > 
 > ***Example:*** `--job-name pl_id-42`
 
@@ -113,7 +113,7 @@ Each of the following arguments are optional, and do not need to be provided.
 > **Path where a local cache of SIFs are stored.**  
 > *type: path*  
 >
-> Uses a local cache of SIFs on the filesystem. This SIF cache can be shared across users if permissions are set correctly. If a SIF does not exist in the SIF cache, the image will be pulled from Dockerhub and a warning message will be displayed. The `pb-benchmark cache` subcommand can be used to create a local SIF cache. Please see `pb-benchmark cache` for more information. This command is extremely useful for avoiding DockerHub pull rate limits. It also remove any potential errors that could occur due to network issues or DockerHub being temporarily unavailable. We recommend running pb-benchmark with this option when ever possible.
+> Uses a local cache of SIFs on the filesystem. This SIF cache can be shared across users if permissions are set correctly. If a SIF does not exist in the SIF cache, the image will be pulled from Dockerhub and a warning message will be displayed. The `parabricks-benchmark cache` subcommand can be used to create a local SIF cache. Please see `parabricks-benchmark cache` for more information. This command is extremely useful for avoiding DockerHub pull rate limits. It also remove any potential errors that could occur due to network issues or DockerHub being temporarily unavailable. We recommend running parabricks-benchmark with this option when ever possible.
 > 
 > ***Example:*** `--singularity-cache /data/$USER/SIFs`
 
@@ -158,16 +158,16 @@ module purge
 module load singularity snakemake
 
 # Step 2A.) Dry-run the pipeline
-./pb-benchmark run --input .tests/*.R?.fastq.gz \
+./parabricks-benchmark run --input .tests/*.R?.fastq.gz \
                   --output /data/$USER/output \
                   --mode slurm \
                   --dry-run
 
-# Step 2B.) Run the pb-benchmark pipeline
+# Step 2B.) Run the parabricks-benchmark pipeline
 # The slurm mode will submit jobs to 
 # the cluster. It is recommended running 
 # the pipeline in this mode.
-./pb-benchmark run --input .tests/*.R?.fastq.gz \
+./parabricks-benchmark run --input .tests/*.R?.fastq.gz \
                   --output /data/$USER/output \
                   --mode slurm
 ```

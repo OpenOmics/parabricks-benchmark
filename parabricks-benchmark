@@ -25,9 +25,9 @@ merchantability or fitness for any particular purpose.
 Please cite the author and NIH resources like the "Biowulf Cluster" 
 in any work or product based on this material.
 USAGE:
-  $ pb-benchmark <command> [OPTIONS]
+  $ parabricks-benchmark <command> [OPTIONS]
 EXAMPLE:
-  $ pb-benchmark run --input *.R?.fastq.gz --output output/
+  $ parabricks-benchmark run --input *.R?.fastq.gz --output output/
 """
 
 # Python standard library
@@ -222,7 +222,7 @@ def parsed_arguments(name, description):
     """
     # Add styled name and description
     c = Colors
-    styled_name = "{0}{1}{2}pb-benchmark{3}".format(c.bold, c.bg_black, c.cyan, c.end)
+    styled_name = "{0}{1}{2}parabricks-benchmark{3}".format(c.bold, c.bg_black, c.cyan, c.end)
     description = "{0}{1}{2}".format(c.bold, description, c.end)
 
     # Create a top-level parser
