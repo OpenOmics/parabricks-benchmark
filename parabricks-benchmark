@@ -119,10 +119,19 @@ def run(sub_args):
         output_path = sub_args.output
     )
 
-    # Override the default genomic reference
+    # Update pointers to reference files
     if sub_args.genome_fasta:
+        if not exists(sub_args.genome_fasta + '.fai') or \
+            not os.access(sub_args.genome_fasta + '.fai', os.R_OK):
+            fatal(
+                'Error: Failed to find an index for genomic FASTA file: "{0}".\n'.format(
+                    sub_args.genome_fasta + '.fai'
+                ),
+                ' └── Please index the FASTA file with "samtools faidx" or check its permissions, and try again!'
+            )
+        # Override the default genomic reference
         config['references']['GENOME_FASTA'] = sub_args.genome_fasta
-        config['references']['GENOME_INDEX'] = sub_args.genome_fasta + '.fai'
+        config['references']['GENOME_FAIDX'] = sub_args.genome_fasta + '.fai'
 
     # Step 3. Resolve docker/singularity bind
     # paths from the config file.
@@ -283,6 +292,8 @@ def parsed_arguments(name, description):
                                 By default, it uses a referenec file in the OpenOmics
                                 shared group area on Biowulf. Please ensure the
                                 provided fasta file is indexed with samtools faidx.
+                                An index file should be present in the same directory
+                                as the provided genomic FASTA file.
                                   Example: --genome-fasta .tests/hg38.fa
 
         {3}{4}Orchestration options:{5}
