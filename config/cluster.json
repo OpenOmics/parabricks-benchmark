@@ -61,5 +61,19 @@
         "partition": "gpu",
         "time": "0-04:00:00",
         "gres": "gpu:a100:2,lscratch:500"
+    },
+    "4-gpu_normal-memory": {
+        "threads": "64",
+        "mem": "240g",
+        "partition": "gpu",
+        "time": "0-02:00:00",
+        "gres": "gpu:a100:4,lscratch:500"
+    },
+    "4-gpu_normal-memory_optimized": {
+        "threads": "64",
+        "mem": "240g",
+        "partition": "gpu",
+        "time": "0-02:00:00",
+        "gres": "gpu:a100:4,lscratch:500"
     }
 }

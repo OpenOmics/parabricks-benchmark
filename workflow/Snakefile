@@ -96,6 +96,21 @@ rule all:
             join(workpath, "gatk_germline", "2gpu_low_memory", "{name}", "{name}.bam"),
             name=samples
         ),
+        # Run Parabricks germline pipeline with 4 GPU and normal memory,
+        # Output files of `rule parabricks_gatk_germline_4gpu_normal_memory`
+        # in file `rules/germline.smk`
+        expand(
+            join(workpath, "gatk_germline", "4gpu_normal_memory", "{name}", "{name}.bam"),
+            name=samples
+        ),
+        # Run Parabricks germline pipeline with 4 GPU and normal memory and
+        # a recommended set of option to gain the best performance/runtimes,
+        # Output files of `rule parabricks_gatk_germline_4gpu_normal_memory_optimized`
+        # in file `rules/germline.smk`
+        expand(
+            join(workpath, "gatk_germline", "4gpu_normal_memory_optimized", "{name}", "{name}.bam"),
+            name=samples
+        ),
 
 
 # Import rules 
