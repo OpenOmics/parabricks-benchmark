@@ -94,7 +94,7 @@ rule parabricks_gatk_germline_1gpu_normal_memory_optimized:
     output:
         bam   = join(workpath, "gatk_germline", "1gpu_normal_memory_optimized", "{sample}", "{name}.bam"),
         # Gzipped VCF cannot be created with --run-partition option
-        gvcf  = join(workpath, "gatk_germline", "1gpu_normal_memory_optimized", "{sample}", "{name}.g.vcf"),
+        gvcf  = join(workpath, "gatk_germline", "1gpu_normal_memory_optimized", "{sample}", "{name}.vcf"),
         recal = join(workpath, "gatk_germline", "1gpu_normal_memory_optimized", "{sample}", "{name}.recal"),
     params:
         # Rule specific parameters
@@ -135,14 +135,12 @@ rule parabricks_gatk_germline_1gpu_normal_memory_optimized:
                 --out-bam {output.bam} \\
                 --out-variants {output.gvcf} \\
                 --out-recal-file {output.recal} \\
-                --gvcf \\
                 --bwa-options="-M" \\
                 --monitor-usage \\
                 --memory-limit {params.RUNNING_MEMORY_GB} \\
                 --tmp-dir /tmp \\
                 --num-cpu-threads-per-stage {threads} \\
                 --bwa-cpu-thread-pool {threads} \\
-                --run-partition \\
                 --read-from-tmp-dir \\
                 --gpusort \\
                 --gpuwrite \\
@@ -379,7 +377,7 @@ rule parabricks_gatk_germline_2gpu_normal_memory_optimized:
     output:
         bam   = join(workpath, "gatk_germline", "2gpu_normal_memory_optimized", "{sample}", "{name}.bam"),
         # Gzipped VCF cannot be created with --run-partition option
-        gvcf  = join(workpath, "gatk_germline", "2gpu_normal_memory_optimized", "{sample}", "{name}.g.vcf"),
+        gvcf  = join(workpath, "gatk_germline", "2gpu_normal_memory_optimized", "{sample}", "{name}.vcf"),
         recal = join(workpath, "gatk_germline", "2gpu_normal_memory_optimized", "{sample}", "{name}.recal"),
     params:
         # Rule specific parameters
@@ -420,7 +418,6 @@ rule parabricks_gatk_germline_2gpu_normal_memory_optimized:
                 --out-bam {output.bam} \\
                 --out-variants {output.gvcf} \\
                 --out-recal-file {output.recal} \\
-                --gvcf \\
                 --bwa-options="-M" \\
                 --monitor-usage \\
                 --memory-limit {params.RUNNING_MEMORY_GB} \\
@@ -596,7 +593,7 @@ rule parabricks_gatk_germline_4gpu_normal_memory_optimized:
     output:
         bam   = join(workpath, "gatk_germline", "4gpu_normal_memory_optimized", "{sample}", "{name}.bam"),
         # Gzipped VCF cannot be created with --run-partition option
-        gvcf  = join(workpath, "gatk_germline", "4gpu_normal_memory_optimized", "{sample}", "{name}.g.vcf"),
+        gvcf  = join(workpath, "gatk_germline", "4gpu_normal_memory_optimized", "{sample}", "{name}.vcf"),
         recal = join(workpath, "gatk_germline", "4gpu_normal_memory_optimized", "{sample}", "{name}.recal"),
     params:
         # Rule specific parameters
@@ -637,7 +634,6 @@ rule parabricks_gatk_germline_4gpu_normal_memory_optimized:
                 --out-bam {output.bam} \\
                 --out-variants {output.gvcf} \\
                 --out-recal-file {output.recal} \\
-                --gvcf \\
                 --bwa-options="-M" \\
                 --monitor-usage \\
                 --memory-limit {params.RUNNING_MEMORY_GB} \\
