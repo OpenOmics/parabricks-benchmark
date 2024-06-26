@@ -43,8 +43,8 @@ rule parabricks_gatk_germline_1gpu_normal_memory:
         sif       = config['images']['parabricks'],
         # Parabricks options
         RUNNING_MEMORY_GB = int(
-            allocated("mem", "1-gpu_normal-memory", cluster).lower().rstrip("g") 
-        ) / 2 ,
+            int(allocated("mem", "1-gpu_normal-memory", cluster).lower().rstrip("g")) / 2
+        ),
         KNOWN_INDELS_1 = config['references']['GATK_KNOWN_INDELS'],
         KNOWN_INDELS_2 = config['references']['OTHER_KNOWN_INDELS'],
     threads: int(allocated("threads", "1-gpu_normal-memory", cluster))
@@ -111,8 +111,8 @@ rule parabricks_gatk_germline_1gpu_normal_memory_optimized:
         sif       = config['images']['parabricks'],
         # Parabricks options
         RUNNING_MEMORY_GB = int(
-            allocated("mem", "1-gpu_normal-memory_optimized", cluster).lower().rstrip("g") 
-        ) / 2 ,
+            int(allocated("mem", "1-gpu_normal-memory_optimized", cluster).lower().rstrip("g")) / 2
+        ),
         KNOWN_INDELS_1 = config['references']['GATK_KNOWN_INDELS'],
         KNOWN_INDELS_2 = config['references']['OTHER_KNOWN_INDELS'],
     threads: int(allocated("threads", "1-gpu_normal-memory_optimized", cluster))
@@ -188,8 +188,8 @@ rule parabricks_gatk_germline_1gpu_low_memory:
         sif       = config['images']['parabricks'],
         # Parabricks options
         RUNNING_MEMORY_GB = int(
-            allocated("mem", "1-gpu_low-memory", cluster).lower().rstrip("g") 
-        ) / 2 ,
+            int(allocated("mem", "1-gpu_low-memory", cluster).lower().rstrip("g")) / 2
+        ),
         KNOWN_INDELS_1 = config['references']['GATK_KNOWN_INDELS'],
         KNOWN_INDELS_2 = config['references']['OTHER_KNOWN_INDELS'],
     threads: int(allocated("threads", "1-gpu_low-memory", cluster))
@@ -288,7 +288,9 @@ rule parabricks_gatk_germline_1gpu_high_memory:
     """
 
 
-# Rules utilizing more than one A100 GPU
+# Rules utilizing more than one A100 GPU,
+# This set of rules use 2 GPUs with different
+# memory allocations and performance options
 rule parabricks_gatk_germline_2gpu_normal_memory:
     """Benchmarking Parabricks GATK Germline pipeline with 2 GPU and an normal allotment
     of main memory. NOTE: The limit memory option needs to be toned down to allow for 
@@ -500,6 +502,7 @@ rule parabricks_gatk_germline_2gpu_low_memory:
                 --low-memory \\
                 --htvc-low-memory
     """
+
 
 # Rule utilizing 4 A100 GPUs,
 # NOTE: each A100 node has 4 GPUs
