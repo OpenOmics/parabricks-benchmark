@@ -141,7 +141,6 @@ rule parabricks_gatk_germline_1gpu_normal_memory_optimized:
                 --tmp-dir /tmp \\
                 --num-cpu-threads-per-stage {threads} \\
                 --bwa-cpu-thread-pool {threads} \\
-                --read-from-tmp-dir \\
                 --gpusort \\
                 --gpuwrite \\
                 --fq2bamfast \\
@@ -425,7 +424,6 @@ rule parabricks_gatk_germline_2gpu_normal_memory_optimized:
                 --num-cpu-threads-per-stage {threads} \\
                 --bwa-cpu-thread-pool {threads} \\
                 --run-partition \\
-                --read-from-tmp-dir \\
                 --gpusort \\
                 --gpuwrite \\
                 --fq2bamfast \\
@@ -641,7 +639,6 @@ rule parabricks_gatk_germline_4gpu_normal_memory_optimized:
                 --num-cpu-threads-per-stage {threads} \\
                 --bwa-cpu-thread-pool {threads} \\
                 --run-partition \\
-                --read-from-tmp-dir \\
                 --gpusort \\
                 --gpuwrite \\
                 --fq2bamfast \\
