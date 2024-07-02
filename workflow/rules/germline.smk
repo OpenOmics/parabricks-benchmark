@@ -26,7 +26,7 @@ rule parabricks_gatk_germline_1gpu_normal_memory:
         r2   = join(workpath,"{name}.R2.fastq.gz"),
     output:
         bam   = join(workpath, "gatk_germline", "1gpu_normal_memory", "{sample}", "{name}.bam"),
-        vcf   = join(workpath, "gatk_germline", "1gpu_normal_memory", "{sample}", "{name}.vcf.gz"),
+        vcf   = join(workpath, "gatk_germline", "1gpu_normal_memory", "{sample}", "{name}.vcf"),
         recal = join(workpath, "gatk_germline", "1gpu_normal_memory", "{sample}", "{name}.recal"),
     params:
         # Rule specific parameters
@@ -167,7 +167,7 @@ rule parabricks_gatk_germline_1gpu_low_memory:
         r2   = join(workpath,"{name}.R2.fastq.gz"),
     output:
         bam   = join(workpath, "gatk_germline", "1gpu_low_memory", "{sample}", "{name}.bam"),
-        vcf   = join(workpath, "gatk_germline", "1gpu_low_memory", "{sample}", "{name}.vcf.gz"),
+        vcf   = join(workpath, "gatk_germline", "1gpu_low_memory", "{sample}", "{name}.vcf"),
         recal = join(workpath, "gatk_germline", "1gpu_low_memory", "{sample}", "{name}.recal"),
     params:
         # Rule specific parameters
@@ -237,7 +237,7 @@ rule parabricks_gatk_germline_1gpu_high_memory:
         r2   = join(workpath,"{name}.R2.fastq.gz"),
     output:
         bam   = join(workpath, "gatk_germline", "1gpu_high_memory", "{sample}", "{name}.bam"),
-        vcf   = join(workpath, "gatk_germline", "1gpu_high_memory", "{sample}", "{name}.vcf.gz"),
+        vcf   = join(workpath, "gatk_germline", "1gpu_high_memory", "{sample}", "{name}.vcf"),
         recal = join(workpath, "gatk_germline", "1gpu_high_memory", "{sample}", "{name}.recal"),
     params:
         # Rule specific parameters
@@ -305,7 +305,7 @@ rule parabricks_gatk_germline_2gpu_normal_memory:
         r2   = join(workpath,"{name}.R2.fastq.gz"),
     output:
         bam   = join(workpath, "gatk_germline", "2gpu_normal_memory", "{sample}", "{name}.bam"),
-        vcf   = join(workpath, "gatk_germline", "2gpu_normal_memory", "{sample}", "{name}.vcf.gz"),
+        vcf   = join(workpath, "gatk_germline", "2gpu_normal_memory", "{sample}", "{name}.vcf"),
         recal = join(workpath, "gatk_germline", "2gpu_normal_memory", "{sample}", "{name}.recal"),
     params:
         # Rule specific parameters
@@ -447,7 +447,7 @@ rule parabricks_gatk_germline_2gpu_low_memory:
         r2   = join(workpath,"{name}.R2.fastq.gz"),
     output:
         bam   = join(workpath, "gatk_germline", "2gpu_low_memory", "{sample}", "{name}.bam"),
-        vcf   = join(workpath, "gatk_germline", "2gpu_low_memory", "{sample}", "{name}.vcf.gz"),
+        vcf   = join(workpath, "gatk_germline", "2gpu_low_memory", "{sample}", "{name}.vcf"),
         recal = join(workpath, "gatk_germline", "2gpu_low_memory", "{sample}", "{name}.recal"),
     params:
         # Rule specific parameters
@@ -518,7 +518,7 @@ rule parabricks_gatk_germline_4gpu_normal_memory:
         r2   = join(workpath,"{name}.R2.fastq.gz"),
     output:
         bam   = join(workpath, "gatk_germline", "4gpu_normal_memory", "{sample}", "{name}.bam"),
-        vcf   = join(workpath, "gatk_germline", "4gpu_normal_memory", "{sample}", "{name}.vcf.gz"),
+        vcf   = join(workpath, "gatk_germline", "4gpu_normal_memory", "{sample}", "{name}.vcf"),
         recal = join(workpath, "gatk_germline", "4gpu_normal_memory", "{sample}", "{name}.recal"),
     params:
         # Rule specific parameters
