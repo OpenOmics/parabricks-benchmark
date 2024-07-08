@@ -75,5 +75,12 @@
         "partition": "gpu",
         "time": "0-02:00:00",
         "gres": "gpu:a100:4,lscratch:500"
+    },
+    "bgzip_index_vcf": {
+        "threads": "2",
+        "mem": "16g",
+        "partition": "norm",
+        "time": "0-02:00:00",
+        "gres": "lscratch:20"
     }
 }

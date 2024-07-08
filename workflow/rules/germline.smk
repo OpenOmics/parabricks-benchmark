@@ -638,3 +638,37 @@ rule parabricks_gatk_germline_4gpu_normal_memory_optimized:
                 --fq2bamfast \\
                 --keep-tmp
     """
+
+
+rule bgzip_index_vcf:
+    """Data processing step to compress the VCF file with bgzip and index it with tabix.
+    @Inputs:
+        VCF file
+    @Outputs:
+        bgzip compressed VCF file,
+        tabix index file
+    """
+    input:
+        vcf = join(workpath, "gatk_germline", "{benchmark_configuration}", "{sample}", "{name}.vcf"),
+    output:
+        vcf = join(workpath, "gatk_germline", "{benchmark_configuration}", "{sample}", "{name}.vcf.gz"),
+        idx = join(workpath, "gatk_germline", "{benchmark_configuration}", "{sample}", "{name}.vcf.gz.tbi"),
+    params:
+        # Job submission parameters
+        rname = "bgzip_index_vcf",
+        mem   = allocated("mem",  "bgzip_index_vcf", cluster),
+        gres  = allocated("gres", "bgzip_index_vcf", cluster),
+        time  = allocated("time", "bgzip_index_vcf", cluster),
+        partition = allocated("partition", "bgzip_index_vcf", cluster),
+    threads: int(allocated("threads", "bgzip_index_vcf", cluster)),
+    container: config['images']['gatk'],
+    shell: """
+    # Bgzip compress the VCF file
+    bgzip \\
+        -c {input.vcf} \\
+    > {output.vcf}
+    # Create a tabix index
+    tabix \\
+        -p vcf \\
+        {output.vcf}
+    """

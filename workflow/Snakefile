@@ -27,6 +27,21 @@ bwa_index_extensions = [
     ".amb", ".ann", ".bwt", ".pac", ".sa"
 ]
 
+# Benchmark configurations for 
+# different GPU, memory, and 
+# performance settings
+benchmark_configurations = [
+    "1gpu_normal_memory",
+    "1gpu_normal_memory_optimized",
+    "1gpu_low_memory",
+    "1gpu_high_memory",
+    "2gpu_normal_memory",
+    "2gpu_normal_memory_optimized",
+    "2gpu_low_memory",
+    "4gpu_normal_memory",
+    "4gpu_normal_memory_optimized"
+]
+
 # Read in resource information,
 # containing information about 
 # threads, mem, walltimes, etc.
@@ -109,6 +124,13 @@ rule all:
         # in file `rules/germline.smk`
         expand(
             join(workpath, "gatk_germline", "4gpu_normal_memory_optimized", "{name}", "{name}.bam"),
+            name=samples
+        ),
+        # bgzip compress and index VCF files,
+        # Output files of `rule bgzip_index_vcf`
+        expand(
+            join(workpath, "gatk_germline", "{benchmark_configuration}", "{name}", "{name}.vcf.gz"),
+            benchmark_configuration=benchmark_configurations,
             name=samples
         ),
 
