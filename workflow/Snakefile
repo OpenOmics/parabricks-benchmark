@@ -60,6 +60,7 @@ rule all:
             join(workpath, "refs", genome + "{ext}"), 
             ext=bwa_index_extensions
         ),
+        # GATK germline pipeline output files,
         # Run Parabricks germline pipeline with 1 GPU and normal memory,
         # Output files of `rule parabricks_gatk_germline_1gpu_normal_memory`
         # in file `rules/germline.smk`
@@ -126,11 +127,24 @@ rule all:
             join(workpath, "gatk_germline", "4gpu_normal_memory_optimized", "{name}", "{name}.bam"),
             name=samples
         ),
+        # DeepVariant germline pipeline output files,
+        # Run Parabricks DeepVariant germline pipeline with 1 GPU and normal memory 
+        # and a recommended set of option to gain the best performance/runtimes,
+        # Output files of `rule parabricks_deepvariant_germline_1gpu_normal_memory_optimized`
+        # in file `rules/germline.smk`
+        expand(
+            join(workpath, "deepvariant_germline", "1gpu_normal_memory_optimized", "{name}", "{name}.bam"),
+            name=samples
+        ),
         # bgzip compress and index VCF files,
         # Output files of `rule bgzip_index_vcf`
         expand(
             join(workpath, "gatk_germline", "{benchmark_configuration}", "{name}", "{name}.vcf.gz"),
             benchmark_configuration=benchmark_configurations,
+            name=samples
+        ),
+        expand(
+            join(workpath, "deepvariant_germline", "1gpu_normal_memory_optimized", "{name}", "{name}.vcf.gz"),
             name=samples
         ),
 

@@ -16,7 +16,7 @@ rule parabricks_gatk_germline_1gpu_normal_memory:
         GIAB Sample fastq file (scatter-per-sample).
     @Outputs:
         BAM file,
-        GVCF file,
+        VCF file,
         Recal table
     """
     input:
@@ -82,7 +82,7 @@ rule parabricks_gatk_germline_1gpu_normal_memory_optimized:
         GIAB Sample fastq file (scatter-per-sample).
     @Outputs:
         BAM file,
-        GVCF file,
+        VCF file,
         Recal table
     """
     input:
@@ -157,7 +157,7 @@ rule parabricks_gatk_germline_1gpu_low_memory:
         GIAB Sample fastq file (scatter-per-sample).
     @Outputs:
         BAM file,
-        GVCF file,
+        VCF file,
         Recal table
     """
     input:
@@ -227,7 +227,7 @@ rule parabricks_gatk_germline_1gpu_high_memory:
         GIAB Sample fastq file (scatter-per-sample).
     @Outputs:
         BAM file,
-        GVCF file,
+        VCF file,
         Recal table
     """
     input:
@@ -282,6 +282,82 @@ rule parabricks_gatk_germline_1gpu_high_memory:
     """
 
 
+rule parabricks_deepvariant_germline_1gpu_normal_memory_optimized:
+    """Benchmarking Parabricks DeepVariant Germline pipeline with 1 GPU and an normal allotment
+    of main/system memory using the recommended set of options for the best performance. 
+    NOTE: The limit memory option needs to be toned down to allow for sufficent system memory to 
+    be available for the GPU. Internal testing has shown that parabricks germline pipeline tends 
+    to use more than the allocated memory (even with
+    the --memory-limit option).
+    @Inputs:
+        GIAB Sample fastq file (scatter-per-sample).
+    @Outputs:
+        BAM file,
+        VCF file
+    """
+    input:
+        idxs = expand(join(workpath, "refs", genome + "{ext}"), ext=bwa_index_extensions),
+        lnk  = join(workpath, "refs", genome),
+        r1   = join(workpath,"{name}.R1.fastq.gz"),
+        r2   = join(workpath,"{name}.R2.fastq.gz"),
+    output:
+        bam   = join(workpath, "deepvariant_germline", "1gpu_normal_memory_optimized", "{sample}", "{name}.bam"),
+        vcf   = join(workpath, "deepvariant_germline", "1gpu_normal_memory_optimized", "{sample}", "{name}.vcf"),
+        recal = join(workpath, "deepvariant_germline", "1gpu_normal_memory_optimized", "{sample}", "{name}.recal"),
+    params:
+        # Rule specific parameters
+        sample = "{name}",
+        # Job submission parameters
+        rname = "pb_dv_germline_1gpu_normal_memory_optimized",
+        mem   = allocated("mem",  "1-gpu_normal-memory_optimized", cluster),
+        gres  = allocated("gres", "1-gpu_normal-memory_optimized", cluster),
+        time  = allocated("time", "1-gpu_normal-memory_optimized", cluster),
+        partition = allocated("partition", "1-gpu_normal-memory_optimized", cluster),
+        # Singularity options
+        bindpaths = ','.join(bindpaths),
+        tmpdir    = tmpdir,
+        sif       = config['images']['parabricks'],
+        # Parabricks options
+        RUNNING_MEMORY_GB = int(
+            int(allocated("mem", "1-gpu_normal-memory_optimized", cluster).lower().rstrip("g")) / 2
+        ),
+        KNOWN_INDELS_1 = config['references']['GATK_KNOWN_INDELS'],
+        KNOWN_INDELS_2 = config['references']['OTHER_KNOWN_INDELS'],
+    threads: int(allocated("threads", "1-gpu_normal-memory_optimized", cluster))
+    shell: """
+    # Run Parabricks germline pipeline with
+    # default acceleration options and the 
+    # recommended set of options for best
+    # performance
+    singularity exec \\
+        -c \\
+        --nv  \\
+        --env TCMALLOC_MAX_TOTAL_THREAD_CACHE_BYTES=268435456 \\
+        -B {params.bindpaths},{params.tmpdir}:/tmp \\
+        {params.sif} \\
+             pbrun deepvariant_germline \\
+                --mode shortread \\
+                --ref {input.lnk} \\
+                --in-fq {input.r1} {input.r1} "@RG\\tID:{params.sample}\\tSM:{params.sample}\\tPL:illumina\\tLB:{params.sample}\\tPU:{params.sample}\\tCN:ncbr\\tDS:wgs" \\
+                --knownSites {params.KNOWN_INDELS_1} \\
+                --knownSites {params.KNOWN_INDELS_2} \\
+                --out-bam {output.bam} \\
+                --out-variants {output.vcf} \\
+                --out-recal-file {output.recal} \\
+                --bwa-options="-M" \\
+                --monitor-usage \\
+                --memory-limit {params.RUNNING_MEMORY_GB} \\
+                --tmp-dir /tmp \\
+                --num-cpu-threads-per-stage {threads} \\
+                --bwa-cpu-thread-pool {threads} \\
+                --num-streams-per-gpu 4 \\
+                --gpusort \\
+                --gpuwrite \\
+                --fq2bamfast \\
+                --keep-tmp
+    """
+
+
 # Rules utilizing more than one A100 GPU,
 # This set of rules use 2 GPUs with different
 # memory allocations and performance options
@@ -295,7 +371,7 @@ rule parabricks_gatk_germline_2gpu_normal_memory:
         GIAB Sample fastq file (scatter-per-sample).
     @Outputs:
         BAM file,
-        GVCF file,
+        VCF file,
         Recal table
     """
     input:
@@ -361,7 +437,7 @@ rule parabricks_gatk_germline_2gpu_normal_memory_optimized:
         GIAB Sample fastq file (scatter-per-sample).
     @Outputs:
         BAM file,
-        GVCF file,
+        VCF file,
         Recal table
     """
     input:
@@ -437,7 +513,7 @@ rule parabricks_gatk_germline_2gpu_low_memory:
         GIAB Sample fastq file (scatter-per-sample).
     @Outputs:
         BAM file,
-        GVCF file,
+        VCF file,
         Recal table
     """
     input:
@@ -508,7 +584,7 @@ rule parabricks_gatk_germline_4gpu_normal_memory:
         GIAB Sample fastq file (scatter-per-sample).
     @Outputs:
         BAM file,
-        GVCF file,
+        VCF file,
         Recal table
     """
     input:
@@ -574,7 +650,7 @@ rule parabricks_gatk_germline_4gpu_normal_memory_optimized:
         GIAB Sample fastq file (scatter-per-sample).
     @Outputs:
         BAM file,
-        GVCF file,
+        VCF file,
         Recal table
     """
     input:
@@ -649,10 +725,10 @@ rule bgzip_index_vcf:
         tabix index file
     """
     input:
-        vcf = join(workpath, "gatk_germline", "{benchmark_configuration}", "{sample}", "{name}.vcf"),
+        vcf = join(workpath, "{tested_tool}", "{benchmark_configuration}", "{sample}", "{name}.vcf"),
     output:
-        vcf = join(workpath, "gatk_germline", "{benchmark_configuration}", "{sample}", "{name}.vcf.gz"),
-        idx = join(workpath, "gatk_germline", "{benchmark_configuration}", "{sample}", "{name}.vcf.gz.tbi"),
+        vcf = join(workpath, "{tested_tool}", "{benchmark_configuration}", "{sample}", "{name}.vcf.gz"),
+        idx = join(workpath, "{tested_tool}", "{benchmark_configuration}", "{sample}", "{name}.vcf.gz.tbi"),
     params:
         # Job submission parameters
         rname = "bgzip_index_vcf",
