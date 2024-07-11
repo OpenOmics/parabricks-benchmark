@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Helper functions
 function err() { cat <<< "$@" 1>&2; }
-function fatal() { cat <<< "$@" 1>&2; usage; exit 1; }
+function fatal() { cat <<< "$@" 1>&2; exit 1; }
 function abspath() { readlink -e "$1"; }
 
 # Check for all required
